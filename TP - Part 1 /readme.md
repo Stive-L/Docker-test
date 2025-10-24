@@ -61,3 +61,6 @@ COPY --from=myapp-build $MYAPP_HOME/target/*.jar $MYAPP_HOME/myapp.jar
 #Define the command to run the app when the container starts
 ENTRYPOINT ["java", "-jar", "myapp.jar"]
 ```
+
+### 1-5 Why do we need a multistage build?
+A reverse proxy acts as a middle man between clients and servers, improving security,

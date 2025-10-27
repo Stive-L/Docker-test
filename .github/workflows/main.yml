@@ -18,7 +18,9 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-
+      
+      - name: Show folder structure
+        run: ls -R
       #finally build your app with the latest command
       - name: Build and test with Maven
         working-directory: "./TP - Part 1/java-api/simpleapi"

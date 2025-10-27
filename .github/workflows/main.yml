@@ -23,5 +23,5 @@ jobs:
         run: ls -R
       #finally build your app with the latest command
       - name: Build and test with Maven
-        working-directory: "./TP - Part 1/java-api/simpleapi"
+        working-directory: "./TP - Part 1 /java-api/simpleapi"
         run: mvn -B clean verify

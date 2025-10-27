@@ -1,7 +1,7 @@
 name: CI devops 2025
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
 
 jobs:
@@ -21,4 +21,5 @@ jobs:
 
       #finally build your app with the latest command
       - name: Build and test with Maven
-        run: mvn -B clean verify --file "./TP - Part 1/java-api/simpleapi/pom.xml"
+        working-directory: "./TP - Part 1/java-api/simpleapi"
+        run: mvn -B clean verify

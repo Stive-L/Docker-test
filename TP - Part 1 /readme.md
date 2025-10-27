@@ -76,3 +76,13 @@ The main commands are docker compose up -d --build to start and build containers
 
 My Docker Compose file defines three services: a PostgreSQL database, a Java backend, and an Apache HTTP proxy.
 The proxy redirects external traffic to the backend, which connects to the database internally.
+
+### 1-9 Document your publication commands and published images in dockerhub.
+
+I used the commands docker tag postgres:17.2-alpine stiivelee/postgres-db:1.0 and docker push stiivelee/postgres-db:1.0 to publish my image.
+
+### 1-10 Why do we put our images into an online repo?
+
+We put our images into an online repository like Docker Hub to share them easily, reuse them on other machines, and simplify deployment without rebuilding the image each time.
+
+

@@ -42,8 +42,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           # relative path to the place where source code with Dockerfile is located
-          context: TP1/java-api
-          file: TP1/java-api/Dockerfile
+          context: TP1 - Part 1 /java-api
+          file: TP1 - Part 1 /java-api/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           # Note: tags has to be all lower-case
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api
@@ -52,8 +52,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           # Build custom database image
-          context: TP1
-          file: TP1/Dockerfile
+          context: TP1 - Part 1 
+          file: TP1 - Part 1/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-db
 
@@ -61,8 +61,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           # Build httpd image
-          context: TP1/http-server
-          file: TP1/http-server/Dockerfile
+          context: TP1 - Part 1 /http-server
+          file: TP1- Part 1 /http-server/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd
 

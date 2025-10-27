@@ -44,7 +44,7 @@ jobs:
       - name: Build image and push backend
         uses: docker/build-push-action@v6
         with:
-          context: "./TP - Part 1/java-api"
+          context: "."
           file: "./TP - Part 1/java-api/Dockerfile"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
           push: ${{ github.ref == 'refs/heads/main' }}

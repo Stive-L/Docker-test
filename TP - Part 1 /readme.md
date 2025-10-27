@@ -64,3 +64,15 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]
 
 ### 1-5 Why do we need a multistage build?
 A reverse proxy acts as a middle man between clients and servers, improving security,
+
+### 1-6 Why is Docker Compose so important?
+Docker Compose is important because it simplifies the management of multiple containers.
+
+### 1-7 Why is Docker Compose so important?
+
+The main commands are docker compose up -d --build to start and build containers, docker compose down to stop and remove them, docker compose ps shows running containers, and docker compose logs -f displays their logs.
+
+### 1-8 Document your Docker Compose file.
+
+My Docker Compose file defines three services: a PostgreSQL database, a Java backend, and an Apache HTTP proxy.
+The proxy redirects external traffic to the backend, which connects to the database internally.

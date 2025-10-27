@@ -22,7 +22,7 @@ jobs:
 
       # Build et tests Maven
       - name: Build and test with Maven
-        working-directory: "./TP - Part 1 /java-api/simpleapi"
+        working-directory: "./TP - Part 1/java-api/simpleapi"
         run: mvn -B clean verify
 
 
@@ -44,8 +44,8 @@ jobs:
       - name: Build image and push backend
         uses: docker/build-push-action@v6
         with:
-          context: "./TP - Part 1 /java-api"
-          file: "./TP - Part 1 /java-api/Dockerfile"
+          context: "./TP - Part 1/java-api"
+          file: "./TP - Part 1/java-api/Dockerfile"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
@@ -61,6 +61,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "./TP - Part 1/http-server"
-          file: "./TP - Part 1 /http-server/Dockerfile"
+          file: "./TP - Part 1/http-server/Dockerfile"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}

@@ -1,33 +1,36 @@
 name: CI devops 2025
+
 on:
   push:
     branches: [main, develop]
   pull_request:
 
 jobs:
+  # ---- CI job ----
   test-backend:
     runs-on: ubuntu-24.04
     steps:
-    #checkout your github code using actions/checkout@v4
+      # Checkout du code
       - uses: actions/checkout@v4
 
-     #do the same with another action (actions/setup-java@v4) that enable to setup jdk 21
+      # Installation du JDK 21
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
-      
+
+      # Build et tests Maven
       - name: Build and test with Maven
-        working-directory: "./TP - Part 1 /java-api/simpleapi"
-        run: mvn -B clean verify        
-  # define job to build and publish docker image
+        working-directory: "./TP - Part 1/java-api/simpleapi"
+        run: mvn -B clean verify
+
+
+  # ---- CD job ----
   build-and-push-docker-image:
     needs: test-backend
-    # run only when code is compiling and tests are passing
     runs-on: ubuntu-24.04
 
-    # steps to perform in job
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,33 +39,28 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build image and push backend
         uses: docker/build-push-action@v6
         with:
-          # relative path to the place where source code with Dockerfile is located
-          context: TP1 - Part 1 /java-api
-          file: TP1 - Part 1 /java-api/Dockerfile
+          context: "./TP - Part 1/java-api"
+          file: "./TP - Part 1/java-api/Dockerfile"
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
           push: ${{ github.ref == 'refs/heads/main' }}
-          # Note: tags has to be all lower-case
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api
 
       - name: Build image and push database
         uses: docker/build-push-action@v6
         with:
-          # Build custom database image
-          context: TP1 - Part 1 
-          file: TP1 - Part 1/Dockerfile
+          context: "./TP - Part 1"
+          file: "./TP - Part 1/Dockerfile"
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
           push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-db
 
       - name: Build image and push httpd
         uses: docker/build-push-action@v6
         with:
-          # Build httpd image
-          context: TP1 - Part 1 /http-server
-          file: TP1- Part 1 /http-server/Dockerfile
+          context: "./TP - Part 1/http-server"
+          file: "./TP - Part 1/http-server/Dockerfile"
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd
-

@@ -27,12 +27,8 @@ jobs:
 
       - name: Analyze with SonarCloud
         working-directory: "./TP - Part 1/java-api/simpleapi"
-        run: mvn -B verify sonar:sonar \
-          -Dsonar.projectKey=stive-l_docker-test \
-          -Dsonar.organization=Stive-L \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-          --file "./TP - Part 1/java-api/simpleapi/pom.xml"
+        run: mvn -B verify sonar:sonar -Dsonar.projectKey=stive-l_docker-test -Dsonar.organization=Stive-L -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file "./TP - Part 1/java-api/simpleapi/pom.xml"
+
 
 
   # ---- CD job ----

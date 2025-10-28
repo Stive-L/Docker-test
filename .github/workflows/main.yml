@@ -1,4 +1,4 @@
-name: CI devops 2025
+name: CI/CD DevOps 2025
 
 on:
   push:
@@ -6,21 +6,18 @@ on:
   pull_request:
 
 jobs:
-  # ---- CI job ----
+  # -------- CI--------
   test-backend:
     runs-on: ubuntu-24.04
     steps:
-      # Checkout du code
       - uses: actions/checkout@v4
 
-      # Installation du JDK 21
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
 
-      # Build et tests Maven
       - name: Build and test with Maven
         working-directory: "./TP - Part 1/java-api/simpleapi"
         run: mvn -B clean verify
@@ -29,9 +26,6 @@ jobs:
         working-directory: "./TP - Part 1/java-api/simpleapi"
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=Stive-L_Docker-test -Dsonar.organization=stive-l -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-
-
-  # ---- CD job ----
   build-and-push-docker-image:
     needs: test-backend
     runs-on: ubuntu-24.04
@@ -46,23 +40,55 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build image and push backend
+      - name: Build and push backend
         uses: docker/build-push-action@v6
         with:
           context: "./TP - Part 1/java-api"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build image and push database
+      - name: Build and push database
         uses: docker/build-push-action@v6
         with:
           context: "./TP - Part 1"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-database:latest
           push: ${{ github.ref == 'refs/heads/main' }}
 
-      - name: Build image and push httpd
+      - name: Build and push httpd
         uses: docker/build-push-action@v6
         with:
           context: "./TP - Part 1/http-server"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
           push: ${{ github.ref == 'refs/heads/main' }}
+
+  # -------- CD --------
+  deploy:
+    needs: build-and-push-docker-image
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Ansible
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install ansible community.docker
+
+      - name: Write SSH key to ~/.ssh/zhuo-chan-stive
+        run: |
+          mkdir -p ~/.ssh
+          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/zhuo-chan-stive
+          chmod 600 ~/.ssh/zhuo-chan-stive
+
+      - name: Add host to known_hosts
+        run: |
+          ssh-keyscan ${{ secrets.TARGET_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Run Ansible playbook
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+        run: |
+          ansible --version
+          ansible-playbook -i inventories/setup.yml playbook.yml \
+            -e "ansible_host=${{ secrets.TARGET_HOST }} ansible_user=${{ secrets.TARGET_USER }}"

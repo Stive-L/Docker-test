@@ -95,5 +95,6 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
           ansible --version
+          cd ansible
           ansible-playbook -i inventories/setup.yml playbook.yml \
             -e "ansible_host=${{ secrets.TARGET_HOST }} ansible_user=${{ secrets.TARGET_USER }}"

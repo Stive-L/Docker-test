@@ -4,9 +4,10 @@
 - name: Run front
   community.docker.docker_container:
     name: front
-    image: "{{ dockerhub_user | default('stiivelee') }}/tp-devops-front:latest"
+    image: stiivelee/tp-devops-front:1.0.0
     pull: yes
     restart_policy: always
+    recreate: true
     published_ports:
       - "8081:80" 
     networks:

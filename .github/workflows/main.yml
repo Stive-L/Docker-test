@@ -64,7 +64,6 @@ jobs:
   # -------- CD --------
   deploy:
     needs: build-and-push-docker-image
-    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -73,7 +72,7 @@ jobs:
       - name: Install Ansible
         run: |
           python3 -m pip install --upgrade pip
-          pip install "ansible>=9"  # ou ansible-core si tu préfères
+          pip install "ansible>=9"
 
       - name: Install Ansible collections
         run: |

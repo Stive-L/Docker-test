@@ -79,12 +79,12 @@ jobs:
           ansible-galaxy collection install community.docker
 
 
-      - name: Write SSH key to ~/.ssh/zhuo-chan-stive
-        run: |
-          mkdir -p ~/.ssh
-          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/zhuo-chan-stive
-          chmod 600 ~/.ssh/zhuo-chan-stive
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+          
       - name: Add host to known_hosts
         run: |
           ssh-keyscan ${{ secrets.TARGET_HOST }} >> ~/.ssh/known_hosts
@@ -93,7 +93,6 @@ jobs:
         env:
           ANSIBLE_HOST_KEY_CHECKING: "False"
         run: |
-          ansible --version
           cd ansible
           ansible-playbook -i inventories/setup.yml playbook.yml \
             -e "ansible_host=${{ secrets.TARGET_HOST }} ansible_user=${{ secrets.TARGET_USER }}"

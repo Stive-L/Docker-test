@@ -3,3 +3,8 @@
 - ansible_user: specifies the SSH user used to connect to the remote server (admin).
 - ansible_ssh_private_key_file: indicates the path to the private SSH key stored.
 - prod group: contains the production host.
+
+### 3-2 Document your playbook
+
+All Docker installation tasks were moved into roles/docker/tasks/main.yml.
+The main playbook (playbook.yml) now only defines the target hosts and calls the docker role.

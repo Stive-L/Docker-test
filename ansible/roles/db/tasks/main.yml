@@ -1,0 +1,13 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/db
+- name: Run database
+  community.docker.docker_container:
+    name: db
+    image: stiivelee/tp-devops-database:latest
+    restart_policy: always
+    env_file: /opt/.env
+    networks:
+      - name: app_network
+  vars:
+    ansible_python_interpreter: /opt/docker_venv/bin/python

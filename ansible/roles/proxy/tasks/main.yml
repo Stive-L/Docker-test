@@ -1,6 +1,12 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for roles/proxy
+- name: Copy proxy configuration
+  template:
+    src: proxy.conf.j2
+    dest: /opt/proxy.conf
+    mode: '0644'
+
 - name: Run proxy
   community.docker.docker_container:
     name: proxy
@@ -8,5 +14,7 @@
     restart_policy: always
     ports:
       - "80:80"
+    volumes:
+      - /opt/proxy.conf:/usr/local/apache2/conf/extra/proxy.conf:ro
     networks:
       - name: proxy_network

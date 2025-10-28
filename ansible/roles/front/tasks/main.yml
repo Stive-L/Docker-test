@@ -7,9 +7,10 @@
     image: "{{ dockerhub_user | default('stiivelee') }}/tp-devops-front:latest"
     pull: yes
     restart_policy: always
+    published_ports:
+      - "8081:80" 
     networks:
       - name: proxy_network
-
     state: started
   vars:
     ansible_python_interpreter: /opt/docker_venv/bin/python

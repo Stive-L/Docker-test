@@ -6,6 +6,8 @@
     name: app
     image: stiivelee/tp-devops-simple-api:latest
     env_file: /opt/.env
+    pull: yes
+    recreate: true
     networks:
       - name: app_network
       - name: proxy_network
